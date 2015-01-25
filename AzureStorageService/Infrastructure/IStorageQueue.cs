@@ -53,6 +53,16 @@ namespace AzureStorageService.Infrastructure
         /// </summary>
         bool IsMonitorRunning { get; }
 
+        /// <summary>
+        /// Gets or sets the batch size of messages to try and retrieve from the queue. Default is 16. Maximum is 32.
+        /// </summary>
+        int BatchSize { get; set; }
+
+        /// <summary>
+        /// Gets or sets the amount of time a message is hidden in the queue after it is received. Default and maximum is 5 minutes.
+        /// </summary>
+        TimeSpan HideMessageTime { get; set; }
+
         #endregion
 
         #region Methods

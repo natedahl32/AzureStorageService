@@ -79,7 +79,7 @@ namespace AzureStorageService.Infrastructure
         {
             // Retrieve reference to a blob
             CloudBlockBlob blockBlob = GetBlockBlobReference(blobName);
-            
+            blockBlob.FetchAttributes();
             byte[] contents = new byte[blockBlob.Properties.Length];
             blockBlob.DownloadToByteArray(contents, 0);
             return contents;

@@ -20,6 +20,7 @@ namespace AzureStorageService.Infrastructure
         #region Declarations
 
         private const int MAX_GET_QUEUE = 32;
+        private const int DEFAULT_GET_QUEUE = 16;
 
         private readonly CloudQueue mCloudQueue;
 
@@ -29,6 +30,8 @@ namespace AzureStorageService.Infrastructure
         private int mMaxBackoff;
         private int mBackoffIncrement;
         private bool mMonitorRunning = false;
+        private int mBatchSize;
+        private TimeSpan mHideMessageTime;
 
         #endregion
 
@@ -41,6 +44,8 @@ namespace AzureStorageService.Infrastructure
             mMinBackoff = -1;
             mMaxBackoff = -1;
             mBackoffIncrement = -1;
+            mHideMessageTime = TimeSpan.FromMinutes(5);
+            mBatchSize = DEFAULT_GET_QUEUE;
         }
 
         #endregion
@@ -81,6 +86,33 @@ namespace AzureStorageService.Infrastructure
 
         public bool IsMonitorRunning { get { return mMonitorRunning; } }
 
+        public int BatchSize
+        {
+            get { return mBatchSize; }
+            set {
+                if (value < 1)
+                    mBatchSize = 1;
+                else if (value > MAX_GET_QUEUE)
+                    mBatchSize = MAX_GET_QUEUE;
+                else
+                    mBatchSize = value;
+            }
+        }
+
+        public TimeSpan HideMessageTime
+        {
+            get { return mHideMessageTime; }
+            set
+            {
+                if (value > TimeSpan.FromMinutes(5))
+                    mHideMessageTime = TimeSpan.FromMinutes(5);
+                else if (value < TimeSpan.FromSeconds(1))
+                    mHideMessageTime = TimeSpan.FromSeconds(1);
+                else
+                    mHideMessageTime = value;
+            }
+        }
+
         #endregion
 
         #region Public Methods
@@ -106,7 +138,7 @@ namespace AzureStorageService.Infrastructure
             {
                 Thread.Sleep(this.Backoff);
 
-                var messages = GetMessages(TimeSpan.FromMinutes(5));
+                var messages = GetMessages(HideMessageTime);
                 if (messages.Count > 0)
                 {
                     this.Backoff = mMinBackoff;
@@ -115,7 +147,7 @@ namespace AzureStorageService.Infrastructure
                     {
                         //process messages
                         OnMessagesToProcess(this, new ProcessQueueEventArgs(messages));
-                        messages = GetMessages(TimeSpan.FromMinutes(5));
+                        messages = GetMessages(HideMessageTime);
                     }
                     noMessageCount = 0;
                 }
@@ -152,14 +184,14 @@ namespace AzureStorageService.Infrastructure
             {
                 await Task.Delay(this.Backoff);
 
-                var messages = await GetMessagesAsync(TimeSpan.FromMinutes(5));
+                var messages = await GetMessagesAsync(HideMessageTime);
                 if (messages.Count > 0)
                 {
                     while (messages.Count != 0)
                     {
                         //process messages
                         OnMessagesToProcess(this, new ProcessQueueEventArgs(messages));
-                        messages = await GetMessagesAsync(TimeSpan.FromMinutes(5));
+                        messages = await GetMessagesAsync(HideMessageTime);
                     }
                     noMessageCount = 0;
                 }
@@ -216,7 +248,7 @@ namespace AzureStorageService.Infrastructure
         /// <returns></returns>
         private List<CloudQueueMessage> GetMessages(TimeSpan visibilityTimeout)
         {
-            var messages = mCloudQueue.GetMessages(MAX_GET_QUEUE, visibilityTimeout);
+            var messages = mCloudQueue.GetMessages(mBatchSize, visibilityTimeout);
             if (messages != null)
             {
                 return messages.ToList();
@@ -233,7 +265,7 @@ namespace AzureStorageService.Infrastructure
         /// <returns></returns>
         private async Task<List<CloudQueueMessage>> GetMessagesAsync(TimeSpan visibilityTimeout)
         {
-            var messages = await mCloudQueue.GetMessagesAsync(MAX_GET_QUEUE, visibilityTimeout, null, null);
+            var messages = await mCloudQueue.GetMessagesAsync(mBatchSize, visibilityTimeout, null, null);
             if (messages != null)
             {
                 return messages.ToList();
