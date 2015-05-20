@@ -18,6 +18,7 @@ namespace AzureStorageService.Infrastructure
         // Dependencies
         private readonly IQueueManager mQueueManager;
         private readonly IBlobContainerManager mBlobContainerManager;
+        private readonly ITableManager mTableManager;
 
         // Storage account object
         private CloudStorageAccount mStorageAccount;
@@ -27,16 +28,19 @@ namespace AzureStorageService.Infrastructure
 
         #endregion
 
-        #region Declarations
+        #region Constructors
 
-        public StorageAccountService(IQueueManager queueManager, IBlobContainerManager blobContainerManager, string connectionString)
+        public StorageAccountService(IQueueManager queueManager, IBlobContainerManager blobContainerManager, ITableManager tableManager, string connectionString)
         {
             if (queueManager == null) throw new ArgumentNullException("queueManager");
+            if (blobContainerManager == null) throw new ArgumentNullException("blobContainerManager");
+            if (tableManager == null) throw new ArgumentNullException("tableManager");
             if (string.IsNullOrEmpty(connectionString)) throw new ArgumentNullException("connectionString");
 
             // Assign managers
             mQueueManager = queueManager;
             mBlobContainerManager = blobContainerManager;
+            mTableManager = tableManager;
 
             // Initialize the service
             this.Initialize(connectionString);
@@ -72,6 +76,16 @@ namespace AzureStorageService.Infrastructure
             return await mBlobContainerManager.GetBlobContainerAsync(name);
         }
 
+        public ITable GetTable(string name)
+        {
+            return mTableManager.GetTable(name);
+        }
+
+        public async Task<ITable> GetTableAsync(string name) 
+        {
+            return await mTableManager.GetTableAsync(name);
+        }
+
         #endregion
 
         #region Private Methods
@@ -88,6 +102,7 @@ namespace AzureStorageService.Infrastructure
             // Create clients that will be needed here
             mQueueManager.Initialize(mStorageAccount.CreateCloudQueueClient());
             mBlobContainerManager.Initialize(mStorageAccount.CreateCloudBlobClient());
+            mTableManager.Initialize(mStorageAccount.CreateCloudTableClient());
 
             // Set initialized flag
             mIsInitialized = true;

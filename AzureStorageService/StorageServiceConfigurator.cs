@@ -22,6 +22,8 @@ namespace AzureStorageService
             kernel.Bind<IStorageQueue>().To<StorageQueue>();
             kernel.Bind<IBlobContainer>().To<BlobContainer>();
             kernel.Bind<IQueueManager>().To<QueueManager>();
+            kernel.Bind<ITableManager>().To<TableManager>();
+            kernel.Bind<ITable>().To<Table>();
             kernel.Bind<IBlobContainerManager>().To<BlobContainerManager>();
             kernel.Bind<IStorageAccountService>().To<StorageAccountService>()
                   .InSingletonScope()

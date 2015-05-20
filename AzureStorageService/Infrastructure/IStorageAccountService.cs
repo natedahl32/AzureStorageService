@@ -47,6 +47,20 @@ namespace AzureStorageService.Infrastructure
         /// <returns></returns>
         Task<IBlobContainer> GetBlobContainerAsync(string name);
 
+        /// <summary>
+        /// Gets a table by name
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        ITable GetTable(string name);
+
+        /// <summary>
+        /// Gets a table by name, asynchronously
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        Task<ITable> GetTableAsync(string name);
+
         #endregion
     }
 }

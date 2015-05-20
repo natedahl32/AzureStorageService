@@ -75,7 +75,11 @@
     <Compile Include="Infrastructure\BlobContainerManager.cs" />
     <Compile Include="Infrastructure\IBlobContainer.cs" />
     <Compile Include="Infrastructure\IBlobContainerManager.cs" />
+    <Compile Include="Infrastructure\ITable.cs" />
+    <Compile Include="Infrastructure\ITableManager.cs" />
     <Compile Include="Infrastructure\StorageQueue.cs" />
+    <Compile Include="Infrastructure\Table.cs" />
+    <Compile Include="Infrastructure\TableManager.cs" />
     <Compile Include="QueueMonitorConfiguration.cs" />
     <Compile Include="StorageServiceConfigurator.cs" />
     <Compile Include="Infrastructure\IStorageQueue.cs" />
