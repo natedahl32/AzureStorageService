@@ -47,7 +47,7 @@ namespace AzureStorageService.Infrastructure
         void DeleteBlockBlobAsync(string blobName);
 
         /// <summary>
-        /// Retrieves the contents of a blob from the container
+        /// Retrieves the contents of a blob from the container. Assumes the blob exists in the cloud.
         /// </summary>
         /// <param name="blobName"></param>
         /// <returns>Byte array of file contents</returns>
@@ -75,6 +75,13 @@ namespace AzureStorageService.Infrastructure
         /// <param name="stream">Stream to write contents to</param>
         /// <returns></returns>
         Task GetBlobContentsAsync(string blobName, Stream stream);
+
+        /// <summary>
+        /// Does a check to see if the blob with this name exists on the cloud
+        /// </summary>
+        /// <param name="blobName"></param>
+        /// <returns></returns>
+        bool BlobExistsOnCloud(string blobName);
 
         #endregion
     }

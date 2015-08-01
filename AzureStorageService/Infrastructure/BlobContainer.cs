@@ -111,6 +111,11 @@ namespace AzureStorageService.Infrastructure
             await blockBlob.DownloadToStreamAsync(stream);
         }
 
+        public bool BlobExistsOnCloud(string blobName)
+        {
+            return GetBlockBlobReference(blobName).Exists();
+        }
+
         #endregion
 
         #region Private Methods
