@@ -71,6 +71,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EventArgs\ProcessQueueEventArgs.cs" />
+    <Compile Include="FileInformation.cs" />
     <Compile Include="Infrastructure\BlobContainer.cs" />
     <Compile Include="Infrastructure\BlobContainerManager.cs" />
     <Compile Include="Infrastructure\IBlobContainer.cs" />
