@@ -28,11 +28,27 @@ namespace AzureStorageService.Infrastructure
         void AddOrUpdateBlockBlob(string blobName, Stream source);
 
         /// <summary>
+        /// Adds or updates a block blob from a stream.
+        /// </summary>
+        /// <param name="blobName">Case sensitive name of blob</param>
+        /// <param name="directory">Directory to save the blob to in the container</param>
+        /// <param name="source">Stream to upload</param>
+        void AddOrUpdateBlockBlob(string blobName, string directory, Stream source);
+
+        /// <summary>
         /// Adds or updates a block blob from a stream, asynchronously
         /// </summary>
         /// <param name="blobName">Case sensitive name of blob</param>
         /// <param name="source">Stream to upload</param>
         Task AddOrUpdateBlockBlobAsync(string blobName, Stream source);
+
+        /// <summary>
+        /// Adds or updates a block blob from a stream, asynchronously
+        /// </summary>
+        /// <param name="blobName">Case sensitive name of blob</param>
+        /// <param name="directory">Directory to save the blob to in the container</param>
+        /// <param name="source">Stream to upload</param>
+        Task AddOrUpdateBlockBlobAsync(string blobName, string directory, Stream source);
 
         /// <summary>
         /// Deletes a block blob from the container
