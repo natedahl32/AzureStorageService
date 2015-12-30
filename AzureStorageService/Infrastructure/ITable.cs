@@ -50,6 +50,14 @@ namespace AzureStorageService.Infrastructure
         /// <param name="entity"></param>
         void DeleteEntity<T>(T entity) where T : TableEntity;
 
+        /// <summary>
+        /// Retrieves all entities in a partition
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="partitionKey"></param>
+        /// <returns></returns>
+        IEnumerable<T> RetrieveEntities<T>(string partitionKey) where T : TableEntity, new();
+
         #endregion
     }
 }

@@ -59,6 +59,12 @@ namespace AzureStorageService.Infrastructure
             mCloudTable.Execute(deleteOperation);
         }
 
+        public IEnumerable<T> RetrieveEntities<T>(string partitionKey) where T : TableEntity, new()
+        {
+            TableQuery<T> query = new TableQuery<T>().Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, partitionKey));
+            return mCloudTable.ExecuteQuery<T>(query);
+        }
+
         #endregion
     }
 }
